@@ -1,0 +1,178 @@
+
+##
+# You should look at the following URL's in order to grasp a solid understanding
+# of Nginx configuration files in order to fully unleash the power of Nginx.
+# http://wiki.nginx.org/Pitfalls
+# http://wiki.nginx.org/QuickStart
+# http://wiki.nginx.org/Configuration
+#
+# Generally, you will want to move this file somewhere, and start with a clean
+# file but keep this around for reference. Or just disable in sites-enabled.
+#
+# Please see /usr/share/doc/nginx-doc/examples/ for more detailed examples.
+##
+
+# Default server configuration
+#
+server {
+	listen 80 default_server;
+#	listen [::]:80 default_server;
+	server_name _;
+	return 301 https://$host$request_uri;
+
+}
+
+server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        ssl on;
+        ssl_certificate /etc/letsencrypt/live/staging.farmnode.manansfarmstore.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/staging.farmnode.manansfarmstore.com/privkey.pem;
+        server_name staging.farmnode.manansfarmstore.com;
+	rewrite ^/$ https://staging.farmerbyte.com permanent;
+	rewrite ^/(.*)$ https://staging.farmerbyte.com/$1 permanent;
+#        location ^~ / {
+#                proxy_pass http://localhost:3011/;
+#                proxy_set_header   HOST              $host;
+#        }
+}
+
+server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        ssl on;
+        ssl_certificate /etc/letsencrypt/live/farmnode.manansfarmstore.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/farmnode.manansfarmstore.com/privkey.pem;
+        server_name farmnode.manansfarmstore.com;
+        rewrite ^/$ https://farmerbyte.com permanent;
+        rewrite ^/(.*)$ https://farmerbyte.com/$1 permanent;
+#        location ^~ / {
+#                proxy_pass http://localhost:3010/;
+#                proxy_set_header   HOST              $host;
+#        }
+}
+
+server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        ssl on;
+        ssl_certificate /etc/letsencrypt/live/staging.farmerbyte.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/staging.farmerbyte.com/privkey.pem;
+        server_name staging.farmerbyte.com;
+        location ^~ / {
+                proxy_pass http://localhost:3011/;
+                proxy_set_header   HOST              $host;
+        }
+}
+
+server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        ssl on;
+        ssl_certificate /etc/letsencrypt/live/farmerbyte.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/farmerbyte.com/privkey.pem;
+        server_name farmerbyte.com;
+        location ^~ / {
+                proxy_pass http://localhost:3010/;
+                proxy_set_header   HOST              $host;
+        }
+}
+
+server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        ssl on;
+        ssl_certificate /etc/letsencrypt/live/staging.api.farmerbyte.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/staging.api.farmerbyte.com/privkey.pem;
+        server_name staging.api.farmerbyte.com;
+        location ^~ / {
+                proxy_pass http://localhost:3013/;
+                proxy_set_header   HOST              $host;
+        }
+}
+
+server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        ssl on;
+        ssl_certificate /etc/letsencrypt/live/api.farmerbyte.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/api.farmerbyte.com/privkey.pem;
+        server_name api.farmerbyte.com;
+        location ^~ / {
+                proxy_pass http://localhost:3012/;
+                proxy_set_header   HOST              $host;
+        }
+}
+
+server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        ssl on;
+        ssl_certificate /etc/letsencrypt/live/staging.nyawijistore.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/staging.nyawijistore.com/privkey.pem;
+        server_name staging.nyawijistore.com;
+        location ^~ / {
+                proxy_pass http://localhost:3013/;
+                proxy_set_header   HOST              $host;
+        }
+}
+
+server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        ssl on;
+        ssl_certificate /etc/letsencrypt/live/prod.nyawijistore.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/prod.nyawijistore.com/privkey.pem;
+        server_name prod.nyawijistore.com;
+        location ^~ / {
+                proxy_pass http://localhost:3012/;
+                proxy_set_header   HOST              $host;
+        }
+}
+
+server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        ssl on;
+        ssl_certificate /etc/letsencrypt/live/dev.manansfarmstore.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/dev.manansfarmstore.com/privkey.pem;
+        server_name dev.manansfarmstore.com;
+        location ^~ / {
+                proxy_pass http://localhost:8000/;
+                proxy_set_header   HOST              $host;
+        }
+}
+
+#server {
+#        listen 443 ssl;
+#        listen [::]:443 ssl;
+#        listen 80 default_server;
+#        listen [::]:80 default_server;
+#        ssl on;
+#        ssl_certificate /etc/letsencrypt/live/mint-development.web.id/fullchain.pem;
+#        ssl_certificate_key /etc/letsencrypt/live/mint-development.web.id/privkey.pem;
+#        server_name mint-development.web.id;
+#        location ^~ / {
+#                proxy_pass http://localhost:8080/;
+#                proxy_set_header   HOST              $host;
+#        }
+#}
+
+# Virtual Host configuration for example.com
+#
+# You can move that to a different file under sites-available/ and symlink that
+# to sites-enabled/ to enable it.
+#
+#server {
+#	listen 80;
+#	listen [::]:80;
+#
+#	server_name example.com;
+#
+#	root /var/www/example.com;
+#	index index.html;
+#
+#	location / {
+#		try_files $uri $uri/ =404;
+#	}
+#}
